@@ -1,0 +1,17 @@
+### Variables
+@baseUrl = http://localhost:4000/api/v1
+
+# ===== Cats =====
+
+### Create Cat
+POST {{baseUrl}}/cats
+Content-Type: application/json
+
+{
+  "name": "Whiskers",
+  "age": 2,
+  "breed": "Siamese"
+}
+
+### Find All Cats
+GET {{baseUrl}}/cats
