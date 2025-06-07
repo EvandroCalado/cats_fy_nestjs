@@ -15,3 +15,34 @@ Content-Type: application/json
 
 ### Find All Cats
 GET {{baseUrl}}/cats
+
+### Find Cat by ID
+GET {{baseUrl}}/cats/1a580050-8677-4897-a53d-08eab17aa880
+
+### Update Cat by ID
+PATCH {{baseUrl}}/cats/1a580050-8677-4897-a53d-08eab17aa880
+Content-Type: application/json
+
+{
+  "name": "Whiskers",
+  "age": 2
+}
+
+### Delete Cat by ID
+DELETE {{baseUrl}}/cats/1a580050-8677-4897-a53d-08eab17aa880
+
+### Restore Cat by ID
+PATCH {{baseUrl}}/cats/1a580050-8677-4897-a53d-08eab17aa880/restore
+
+# ===== Breeds =====
+
+### Create Breed
+POST {{baseUrl}}/breeds
+Content-Type: application/json
+
+{
+  "name": "Siamese"
+}
+
+### Find All Breeds
+GET {{baseUrl}}/breeds

@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CatsModule } from './cats/cats.module';
+import { BreedsModule } from './breeds/breeds.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CatsModule } from './cats/cats.module';
         synchronize: true,
       }),
     }),
+    BreedsModule,
   ],
   controllers: [],
   providers: [],

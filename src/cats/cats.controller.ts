@@ -44,4 +44,9 @@ export class CatsController {
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.catsService.remove(id);
   }
+
+  @Patch(':id/restore')
+  restore(@Param('id', ParseUUIDPipe) id: string) {
+    return this.catsService.restore(id);
+  }
 }

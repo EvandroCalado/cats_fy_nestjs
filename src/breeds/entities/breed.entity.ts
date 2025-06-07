@@ -1,24 +1,21 @@
-import { Breed } from 'src/breeds/entities/breed.entity';
+import { Cat } from 'src/cats/entities/cat.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class Cat {
+export class Breed {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
-
-  @Column()
-  age: number;
 
   @DeleteDateColumn()
   deletedAt: Date;
@@ -29,8 +26,6 @@ export class Cat {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Breed, (breed) => breed.cats, {
-    eager: true,
-  })
-  breed: Breed;
+  @OneToMany(() => Cat, (cat) => cat.breed)
+  cats: Cat[];
 }

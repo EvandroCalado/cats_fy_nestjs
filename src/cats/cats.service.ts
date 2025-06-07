@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Breed } from 'src/breeds/entities/breed.entity';
 import { Repository } from 'typeorm';
 
 import { CreateCatDto } from './dto/create-cat.dto';
@@ -11,10 +12,23 @@ export class CatsService {
   constructor(
     @InjectRepository(Cat)
     private readonly catRepository: Repository<Cat>,
+    @InjectRepository(Breed)
+    private breedsRepository: Repository<Breed>,
   ) {}
 
-  create(createCatDto: CreateCatDto) {
-    const cat = this.catRepository.create(createCatDto);
+  async create(createCatDto: CreateCatDto) {
+    const breed = await this.breedsRepository.findOneBy({
+      name: createCatDto.breed,
+    });
+
+    if (!breed) {
+      throw new NotFoundException('Breed not found');
+    }
+
+    const cat = this.catRepository.create({
+      ...createCatDto,
+      breed,
+    });
     return this.catRepository.save(cat);
   }
 
@@ -33,9 +47,18 @@ export class CatsService {
   }
 
   async update(id: string, updateCatDto: UpdateCatDto) {
+    const breed = await this.breedsRepository.findOneBy({
+      name: updateCatDto.breed,
+    });
+
+    if (!breed) {
+      throw new NotFoundException('Breed not found');
+    }
+
     const cat = await this.catRepository.preload({
       id,
       ...updateCatDto,
+      breed,
     });
 
     if (!cat) {
@@ -48,6 +71,20 @@ export class CatsService {
   async remove(id: string) {
     await this.catRepository.findOneBy({ id });
 
-    return this.catRepository.softDelete({ id });
+    await this.catRepository.softDelete({ id });
+
+    return {
+      message: 'Cat deleted successfully',
+    };
+  }
+
+  async restore(id: string) {
+    await this.catRepository.findOneBy({ id });
+
+    await this.catRepository.restore({ id });
+
+    return {
+      message: 'Cat restored successfully',
+    };
   }
 }
