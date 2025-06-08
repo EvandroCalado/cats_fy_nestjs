@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './entities/user.entity';
+import { Role, User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +20,7 @@ export class UsersService {
     try {
       const user = this.userRepository.create({
         ...createUserDto,
-        role: 'USER',
+        role: Role.USER,
       });
       return await this.userRepository.save(user);
     } catch (error) {
@@ -38,6 +38,17 @@ export class UsersService {
 
   async findOneByEmail(email: string) {
     const user = await this.userRepository.findOneBy({ email });
+
+    return user;
+  }
+
+  async findOneByEmailWithPassword(email: string) {
+    const user = await this.userRepository.findOne({
+      where: {
+        email,
+      },
+      select: ['id', 'name', 'email', 'password', 'role'],
+    });
 
     return user;
   }
