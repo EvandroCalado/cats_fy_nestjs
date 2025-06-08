@@ -7,7 +7,7 @@ import {
   Post,
   Request,
 } from '@nestjs/common';
-import { AuthenticatedRequest } from 'src/common/interfaces/authenticated-request.interface';
+import { AuthenticatedUser } from 'src/common/interfaces/authenticated-user.interface';
 import { Role } from 'src/users/entities/user.entity';
 
 import { AuthService } from './auth.service';
@@ -32,7 +32,7 @@ export class AuthController {
 
   @Auth(Role.USER)
   @Get('profile')
-  profile(@Request() req: AuthenticatedRequest) {
+  profile(@Request() req: AuthenticatedUser) {
     return req.user;
   }
 }

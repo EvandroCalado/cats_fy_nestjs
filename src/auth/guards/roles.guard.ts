@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { AuthenticatedRequest } from 'src/common/interfaces/authenticated-request.interface';
+import { AuthenticatedUser } from 'src/common/interfaces/authenticated-user.interface';
 import { Role } from 'src/users/entities/user.entity';
 
 import { ROLE } from '../constants/role.constant';
@@ -22,7 +22,7 @@ export class RolesGuard implements CanActivate {
 
     if (!requireRoles) return true;
 
-    const request: AuthenticatedRequest = context.switchToHttp().getRequest();
+    const request: AuthenticatedUser = context.switchToHttp().getRequest();
     const user = request.user;
 
     if (user.role === Role.ADMIN) return true;

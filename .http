@@ -33,6 +33,7 @@ Authorization: Bearer {{accessToken}}
 ### Create Cat
 POST {{baseUrl}}/cats
 Content-Type: application/json
+Authorization: Bearer {{accessToken}}
 
 {
   "name": "Whiskers",
@@ -42,13 +43,16 @@ Content-Type: application/json
 
 ### Find All Cats
 GET {{baseUrl}}/cats
+Authorization: Bearer {{accessToken}}
 
 ### Find Cat by ID
 GET {{baseUrl}}/cats/1a580050-8677-4897-a53d-08eab17aa880
+Authorization: Bearer {{accessToken}}
 
 ### Update Cat by ID
 PATCH {{baseUrl}}/cats/1a580050-8677-4897-a53d-08eab17aa880
 Content-Type: application/json
+Authorization: Bearer {{accessToken}}
 
 {
   "name": "Whiskers",
@@ -57,9 +61,11 @@ Content-Type: application/json
 
 ### Delete Cat by ID
 DELETE {{baseUrl}}/cats/1a580050-8677-4897-a53d-08eab17aa880
+Authorization: Bearer {{accessToken}}
 
 ### Restore Cat by ID
 PATCH {{baseUrl}}/cats/1a580050-8677-4897-a53d-08eab17aa880/restore
+Authorization: Bearer {{accessToken}}
 
 # ===== Breeds =====
 

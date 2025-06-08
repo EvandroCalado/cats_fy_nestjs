@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { CatsModule } from './cats/cats.module';
-import { BreedsModule } from './breeds/breeds.module';
-import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { BreedsModule } from './breeds/breeds.module';
+import { CatsModule } from './cats/cats.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    CatsModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -25,11 +25,20 @@ import { AuthModule } from './auth/auth.module';
         synchronize: true,
       }),
     }),
-    BreedsModule,
-    UsersModule,
+    JwtModule.registerAsync({
+      global: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.getOrThrow('JWT_SECRET'),
+        signOptions: { expiresIn: configService.getOrThrow('JWT_EXPIRES_IN') },
+      }),
+    }),
     AuthModule,
+    BreedsModule,
+    CatsModule,
+    UsersModule,
   ],
-  controllers: [],
-  providers: [],
+  exports: [JwtModule],
 })
 export class AppModule {}
