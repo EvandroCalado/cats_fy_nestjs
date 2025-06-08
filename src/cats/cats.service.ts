@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Breed } from 'src/breeds/entities/breed.entity';
+import { CurrentUser } from 'src/common/interfaces/current-user.interface';
 import { Repository } from 'typeorm';
 
 import { CreateCatDto } from './dto/create-cat.dto';
@@ -16,7 +17,7 @@ export class CatsService {
     private breedsRepository: Repository<Breed>,
   ) {}
 
-  async create(createCatDto: CreateCatDto) {
+  async create(createCatDto: CreateCatDto, user: CurrentUser) {
     const breed = await this.breedsRepository.findOneBy({
       name: createCatDto.breed,
     });
@@ -28,25 +29,32 @@ export class CatsService {
     const cat = this.catRepository.create({
       ...createCatDto,
       breed,
+      userEmail: user.email,
     });
     return this.catRepository.save(cat);
   }
 
-  findAll() {
-    return this.catRepository.find();
+  findAll(user: CurrentUser) {
+    return this.catRepository.find({
+      where: {
+        userEmail: user.email,
+      },
+    });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user: CurrentUser) {
     const cat = await this.catRepository.findOneBy({ id });
 
     if (!cat) {
       throw new NotFoundException('Cat not found');
     }
 
+    this.validateOwnerShip(cat, user);
+
     return cat;
   }
 
-  async update(id: string, updateCatDto: UpdateCatDto) {
+  async update(id: string, updateCatDto: UpdateCatDto, user: CurrentUser) {
     const breed = await this.breedsRepository.findOneBy({
       name: updateCatDto.breed,
     });
@@ -65,11 +73,19 @@ export class CatsService {
       throw new NotFoundException('Cat not found');
     }
 
+    this.validateOwnerShip(cat, user);
+
     return this.catRepository.save(cat);
   }
 
-  async remove(id: string) {
-    await this.catRepository.findOneBy({ id });
+  async remove(id: string, user: CurrentUser) {
+    const cat = await this.catRepository.findOneBy({ id });
+
+    if (!cat) {
+      throw new NotFoundException('Cat not found');
+    }
+
+    this.validateOwnerShip(cat, user);
 
     await this.catRepository.softDelete({ id });
 
@@ -78,13 +94,29 @@ export class CatsService {
     };
   }
 
-  async restore(id: string) {
-    await this.catRepository.findOneBy({ id });
+  async restore(id: string, user: CurrentUser) {
+    const restoredCat = await this.catRepository.restore({ id });
 
-    await this.catRepository.restore({ id });
+    if (restoredCat.affected === 0) {
+      throw new NotFoundException('Cat not found or you are not the owner');
+    }
+
+    const cat = await this.catRepository.findOneBy({ id });
+
+    if (!cat) {
+      throw new NotFoundException('Cat not found');
+    }
+
+    this.validateOwnerShip(cat, user);
 
     return {
       message: 'Cat restored successfully',
     };
+  }
+
+  private validateOwnerShip(cat: Cat, user: CurrentUser) {
+    if (cat.userEmail !== user.email) {
+      throw new NotFoundException('Cat not found');
+    }
   }
 }

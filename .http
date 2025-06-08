@@ -9,8 +9,8 @@ POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "name": "Jane Doe",
-  "email": "jane.doe@example.com",
+  "name": "John Doe",
+  "email": "john.doe@example.com",
   "password": "password123"
 }
 
@@ -20,7 +20,7 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "jane.doe@example.com",
+  "email": "john.doe@example.com",
   "password": "password123"
 }
 
@@ -46,25 +46,25 @@ GET {{baseUrl}}/cats
 Authorization: Bearer {{accessToken}}
 
 ### Find Cat by ID
-GET {{baseUrl}}/cats/1a580050-8677-4897-a53d-08eab17aa880
+GET {{baseUrl}}/cats/6ff32c51-4ac2-409e-8896-9e9c8427d3b7
 Authorization: Bearer {{accessToken}}
 
 ### Update Cat by ID
-PATCH {{baseUrl}}/cats/1a580050-8677-4897-a53d-08eab17aa880
+PATCH {{baseUrl}}/cats/6ff32c51-4ac2-409e-8896-9e9c8427d3b7
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
   "name": "Whiskers",
-  "age": 2
+  "age": 4
 }
 
 ### Delete Cat by ID
-DELETE {{baseUrl}}/cats/1a580050-8677-4897-a53d-08eab17aa880
+DELETE {{baseUrl}}/cats/6ff32c51-4ac2-409e-8896-9e9c8427d3b7
 Authorization: Bearer {{accessToken}}
 
 ### Restore Cat by ID
-PATCH {{baseUrl}}/cats/1a580050-8677-4897-a53d-08eab17aa880/restore
+PATCH {{baseUrl}}/cats/6ff32c51-4ac2-409e-8896-9e9c8427d3b7/restore
 Authorization: Bearer {{accessToken}}
 
 # ===== Breeds =====
