@@ -7,6 +7,7 @@ import {
   Post,
   Request,
 } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthenticatedUser } from 'src/common/interfaces/authenticated-user.interface';
 import { Role } from 'src/users/entities/user.entity';
 
@@ -30,6 +31,7 @@ export class AuthController {
     return this.authService.Login(loginDto);
   }
 
+  @ApiBearerAuth()
   @Auth(Role.USER)
   @Get('profile')
   profile(@Request() req: AuthenticatedUser) {
