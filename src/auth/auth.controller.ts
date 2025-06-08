@@ -6,14 +6,14 @@ import {
   HttpStatus,
   Post,
   Request,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthenticatedRequest } from 'src/common/interfaces/authenticated-request.interface';
+import { Role } from 'src/users/entities/user.entity';
 
 import { AuthService } from './auth.service';
+import { Auth } from './decorators/auth.decorator';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { AuthGuard } from './guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -30,7 +30,7 @@ export class AuthController {
     return this.authService.Login(loginDto);
   }
 
-  @UseGuards(AuthGuard)
+  @Auth(Role.USER)
   @Get('profile')
   profile(@Request() req: AuthenticatedRequest) {
     return req.user;

@@ -24,7 +24,6 @@ export class UsersService {
       });
       return await this.userRepository.save(user);
     } catch (error) {
-      console.log(error);
       if (
         error instanceof Error &&
         'code' in error &&
